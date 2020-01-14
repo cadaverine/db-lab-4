@@ -6,12 +6,12 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Student struct {
+type StudentCourseInfo struct {
 	Name   string
 	Course string
 }
 
-func SelectStudents(db *sqlx.DB, limit, offset int) ([]Student, error) {
+func SelectStudents(db *sqlx.DB, limit, offset int) ([]StudentCourseInfo, error) {
 	query := `
 		SELECT temp.name, c.name as course
 		FROM lms.courses as c
@@ -29,7 +29,7 @@ func SelectStudents(db *sqlx.DB, limit, offset int) ([]Student, error) {
 		OFFSET $2;
 	`
 
-	var students []Student
+	var students []StudentCourseInfo
 
 	err := db.Select(&students, query, limit, offset)
 	if err != nil {

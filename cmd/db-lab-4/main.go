@@ -28,14 +28,24 @@ func main() {
 	}
 
 	// Получаем студентов, закончивших курсы
-	students, err := queries.SelectStudents(db, 10, 0)
+	students, err := queries.SelectStudents(db, 2, 0)
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(1)
 	}
 
 	data, _ := json.Marshal(students)
-	fmt.Printf("%+v", string(data))
+	fmt.Printf("%+v\n\n", string(data))
+
+	// Добавляем студента в базу
+	student := &queries.Student{"Ragnar", "Lothbrok", "11-02-1990", "ragnar@lothbrok.com", ""}
+	id, err := queries.InsertStudent(db, student)
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("ID: %v\n\n", id)
 
 	defer db.Close()
 }
