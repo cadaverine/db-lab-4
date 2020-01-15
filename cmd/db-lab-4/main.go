@@ -23,7 +23,12 @@ func main() {
 
 	db, err := sqlx.Connect("pgx", dbURL)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connection to database: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Database connection failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	if err = db.Ping(); err != nil {
+		fmt.Fprintf(os.Stderr, "Database is anavailable: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -46,6 +51,20 @@ func main() {
 	}
 
 	fmt.Printf("ID: %v\n\n", id)
+
+	// Обновляем номер телефона студента
+	err = queries.UpdateStudentPhone(db, 10, "89999999999")
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
+	}
+
+	// Удаляем студента
+	err = queries.DeleteStudent(db, 10)
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
+	}
 
 	defer db.Close()
 }
