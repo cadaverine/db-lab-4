@@ -26,6 +26,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Database connection failed: %v\n", err)
 		os.Exit(1)
 	}
+	defer db.Close()
 
 	if err = db.Ping(); err != nil {
 		fmt.Fprintf(os.Stderr, "Database is anavailable: %v\n", err)
@@ -59,12 +60,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Удаляем студента
-	err = queries.DeleteStudent(db, 10)
+	// Удаляем студента и его учебный прогресс (транзакция)
+	err = queries.DeleteStudent(db, 9)
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(1)
 	}
-
-	defer db.Close()
 }
